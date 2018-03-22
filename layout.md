@@ -34,7 +34,7 @@ Backbone uses a module pattern to wrap everything up in an IIFE, in order to pro
 });
 ```
 
-If you've read the source code of jQuery, it is familiar with you.
+If you've read the source code of jQuery, you'll be familiar with it.
 The initial setup is wrapped in an IIFE, which accepts a factory function for constructing Backbone. Before making a call to this factory function, the IIFE first detech environment to set up the right root object, then check to see which module scheme is used. There are 3 available schemes, AMD, CommonJS or script-tag.
 
 `noConflict` function is pretty straight forward. Before overwritting `root.Backbone`, store it in a local variable, such that when there's a conflict, you can:
