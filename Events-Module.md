@@ -185,7 +185,7 @@ where
 - `callback` {Function}:
     a callback function
 - `options` {Object}:
-    this object contains **context**, **ctx** & **listening** fields. **context** is used as the context of `callback`. In personal opinion, **ctx** is something extra. Omit **listening** for a second.
+    this object contains **context**, **ctx** & **listening** fields. **ctx** is used as the context of `callback`. In personal opinion, **context** is something extra. Omit **listening** for a second.
 
 ```js
 /**
