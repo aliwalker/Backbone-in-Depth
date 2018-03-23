@@ -9,8 +9,10 @@ For the following reasons:
 - To get a deeper understanding of MVC pattern.
 
 ## Who is This For?
-Basically, for only myself. If you happened to see it, and are interested in the implementation of Backbone, it might be helpful.
+Basically, for myself. If you happened to see it, and are interested in the implementation of Backbone, it might be helpful.
+Note that this is not a Backbone tutorial. If you're new to Backbone, take the Docs on [official website](http://backbonejs.org/).
 
 ## Content
 - [Layout & initial setup](layout.md)
 - [Events Module](Events-Module.md)
+- [Class Inheritance in Backbone](Inheritance.md)
