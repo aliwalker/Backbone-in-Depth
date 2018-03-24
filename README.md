@@ -17,3 +17,4 @@ Note that this is not a Backbone tutorial. If you're new to Backbone, take the D
 - [Events Module](Events-Module.md)
 - [Class Inheritance in Backbone](Inheritance.md)
 - [Backbone.Model](Model.md)
+- [Backbone.View](View.md)
