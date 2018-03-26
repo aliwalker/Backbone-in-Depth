@@ -26,7 +26,7 @@ This means that routes can have parameters. `:param` matches a single parameter;
 
 ## Router
 
-You might need a call graph. Note that `Backbone.history` is an instance of `Backbone.History`, which handles whether to use `pushState` or hash fragments. I'll talk about that later.
+You might need a call graph. You might be wondering what `Backbone.history` is. Unfortunately, the official docs only provides a single `start` method of this class. For now I'll not talk about it before it gets pretty messy. Just know there is a `Backbone.history` object that can handle state management of history, either using `pushState` or hash fragments, or even polling which you don't want to bother to understand now. 
 
 ![](assets/router.png)
 
@@ -104,7 +104,7 @@ The first 2 `replace` calls can be understood. Here's what I found on MDN:
 | $` | Inserts the portion of the string that precedes the matched substring. |
 | $n | Where n is a positive integer less than 100, inserts the nth parenthesized submatch string, provided the first argument was a RegExp object. Note that this is 1-indexed. |
 
-Best way to understand it is examples. Assume we have a route
+To make life easier, assume that `history` knows we're using `pushState`, and we have a route
 
     `/employee[:name]/(id)`.
 
@@ -132,7 +132,7 @@ The last step is to append something which I cannot really understand & return a
 
 Next thing to take a look is `route` method. After converting `route` to a RegExp, it then delegates to `history.route`.
 
-`history.route` is pretty simple. It only registers a call back to `history.handlers`. `history` is an object guarding for different state managemnts. But its implementation is quite complicated, too.
+`history.route` is pretty simple, `history` is pretty complicated though. `history.route` registers our callback to `history.handlers`. It does all those state management for us, but currently we're not into it because it just complicated.
 
 
 ```js
@@ -149,9 +149,13 @@ route: function(route, name, callback) {
 
   // Delegate to `history.route`
   var router = this;
-  Backbone.history.route(route, function(fragment) {
+  // For later reference, I added a name to this callback.
+  Backbone.history.route(route, function routeHandler (fragment) {
+    // Get the parameters from current fragment
     var args = router._extractParameters(route, fragment);
+    // Execute our callback.
     if (router.execute(callback, args, name) !== false) {
+      // Trigger events for the observer to react.
       router.trigger.apply(router, ['route:' + name].concat(args));
       router.trigger('route', name, args);
       Backbone.history.trigger('route', router, name, args);
@@ -160,4 +164,23 @@ route: function(route, name, callback) {
   return this;
 }
 
+_extractParameters: function(route, fragment) {
+  // extract parameters
+  var params = route.exec(fragment).slice(1);
+  return _.map(params, function(param, i) {
+    
+    // Don't decode the search params.
+    if (i === params.length - 1) return param || null;
+    return param ? decodeURIComponent(param) : null;
+  });
+}
 ```
+Now, let me put the picture altogether.
+
+1. Remember each route we specified, either when exetending `Backbone.Router` or when creating an instance router, will be converted to a RegExp object. This RegExp is used for matching **parameters**.
+
+2. When the `popstate` event happens(assuming that `history` figured out that we should use `pushState`), `history` object figures out which route is currently active, and triggers that `routeHandler` function above.
+
+3. `_extractParameters` use `route` to match a set of **parameters**, pass to the callback that we've registered for this route.
+
+This might take time to understand.
