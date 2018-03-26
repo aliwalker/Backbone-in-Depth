@@ -24,7 +24,7 @@ For example, here are some urls can be matched:
 
 This means that routes can have parameters. `:param` matches a single parameter; `*param` matches any number of parameters; `(:param)` parameter wrapped in parentheses is optional. And we know that this match is performed by regular expressions. However, I'll take you to the fruastration...
 
-## Router Part
+## Router
 
 You might need a call graph. Note that `Backbone.history` is an instance of `Backbone.History`, which handles whether to use `pushState` or hash fragments. I'll talk about that later.
 
