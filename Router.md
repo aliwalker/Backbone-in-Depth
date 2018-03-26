@@ -1,4 +1,4 @@
-# The Fraustrating Regx
+# The Fraustrating RegExp
 The most tedious part of programming, is probably the regular expression, because it is just too complicated. One of the greatest features `Backbone` provides us, is the style of declarative routes & event handling. It abstracts away the complexity of regular expressions, and provides simple notations.
 
 Firstly, as a reminder, when extending a router, routes can be defined in declarative syntax:
