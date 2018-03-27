@@ -57,14 +57,13 @@ An intuitive workflow of `Backbone.Router` instance is:
 
 3. `Backbone.history` object watches the current path, based on different history state management schemes, listens to either `popstate` or `hashchange` event. Whenever the current fragment changes, `history` searches its handlers, if `handler.route` can match the current fragment, `handler.callback` will be called.
 
+It doesn't matter if you cannot completely understand it at present. Feel free to read on.
 
-## Router
-
-You might need a call graph. You might be wondering what `Backbone.history` is. Unfortunately, the official docs only provides a single `start` method of this class. For now I'll not talk about it before it gets pretty messy. Just know there is a `Backbone.history` object that can handle state management of history, either using `pushState` or hash fragments, or even polling which you don't want to bother to understand now. 
+You might need a call graph before you step into the source code:
 
 ![](assets/router.png)
 
-#### Constructor
+## Constructor
 
 Let's first take a look at the first few lines of the router module:
 
@@ -89,9 +88,9 @@ var escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g;
     This one is not so straight forward. It took me time to find out what it is. As its name suggest, this regx matches some meta characters in regular expression:
     `-, {, }, [, ], +, ., comma, \, ^, $, #, whitespace` will be matched by this regx. You might be wondering there is not a back slash among: `\]+?.,`. It's find, MDN says they lose their special meanings inside a character set. some characters wrapped in a pair of bracket form a character set. An answear on stackoverflow has mentioned it, [go check it.](https://stackoverflow.com/questions/399078/what-special-characters-must-be-escaped-in-regular-expressions)
 
-#### _bindRoutes & _routeToRegExp
+## _bindRoutes & _routeToRegExp
 
-Constructor simply calls `_bindRoutes` which in turn call `route` on each route of `this.routes`.
+`_bindRoutes` deals with all `routes`:
 
 ```js
 _bindRoutes: function() {
@@ -209,12 +208,10 @@ _extractParameters: function(route, fragment) {
   });
 }
 ```
-Now, let me put the picture altogether.
+To draw a conclusion, let me put the picture altogether.
 
-1. Remember each route we specified, either when exetending `Backbone.Router` or when creating an instance router, will be converted to a RegExp object. This RegExp is used for matching **parameters**.
+1. Remember each route we specified will be converted to a RegExp object. This RegExp is used for matching **parameters**.
 
 2. When the `popstate` event happens(assuming that `history` figured out that we should use `pushState`), `history` object figures out which route is currently active, and triggers that `routeHandler` function above.
 
 3. `_extractParameters` use `route` to match a set of **parameters**, pass to the callback that we've registered for this route.
-
-This might take time to understand.
