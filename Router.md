@@ -1,10 +1,13 @@
 # The Fraustrating RegExp
-The most tedious part of programming, is probably the regular expression, because it is just too complicated. One of the greatest features `Backbone` provides us, is the style of declarative routes & event handling. It abstracts away the complexity of regular expressions, and provides simple notations.
+The most tedious part of programming, is probably the regular expression, because it is just too complicated. One of the greatest features `Backbone` provides us, is the style of declarative routes & event handling. It abstracts away the complexity of regular expressions.
 
 Firstly, as a reminder, when extending a router, routes can be defined in declarative syntax:
 
 ```js
 var Router = new Backbone.Router.extend({
+
+    // Each route can also be declared as string/function pair, e.g.
+    // "search/:query/p:page": function(query, page) {  }
     routes: {
         "search/:query/p:page": "search",
         "file/*path": "file",
@@ -22,7 +25,38 @@ For example, here are some urls can be matched:
 - "file/folder/router.js" - file("folder/router.js");
 - "docs" - file("");
 
-This means that routes can have parameters. `:param` matches a single parameter; `*param` matches any number of parameters; `(:param)` parameter wrapped in parentheses is optional. And we know that this match is performed by regular expressions. However, I'll take you to the fruastration...
+This illustrates that routes can have 3 types of parameters:
+
+- `:param` matches a single **named parameter**;
+- `*param` matches a parameter of any length, and is called a **splat parameter**;
+- `(:param)` parameter wrapped in parentheses is **optional**.
+
+An intuitive workflow of `Backbone.Router` instance is:
+
+1. You specify declarative `routes` in the `option` object, either when extending the class as the above example did, or when `new`-ing an instance.
+2. The constructor will convert each route to a RegExp object internally and register corresponding callback to that route. For example:
+
+```js
+  // you specify a route `book/:id`, with `book` callback
+  routes: {
+    "book/:id": "book"
+  }
+  // internally, it become something like this:
+  var self = this;    // `this` is a Router instance here.
+  Backbone.history.handlers.unshift({
+    route: /book\/([^/?])/,   // converted to RegExp
+    callback: function(fragment) {
+      // Extract parameters from current fragment
+      var args = router._extractParameters(route, fragment);
+      self["book"].apply(self, args);
+      // then trigger events
+    }
+  });
+```
+  I made up the code above just for comprehension. It is actually more complicated than that.
+
+3. `Backbone.history` object watches the current path, based on different history state management schemes, listens to either `popstate` or `hashchange` event. Whenever the current fragment changes, `history` searches its handlers, if `handler.route` can match the current fragment, `handler.callback` will be called.
+
 
 ## Router
 
