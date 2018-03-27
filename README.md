@@ -1,12 +1,12 @@
 ## What is this?
-This is a `Backbone.js` in depth study, or say, analysis on `Backbone.js` source code.
+This is a `Backbone.js` in depth study, or say, `Backbone.js` source code in depth study.
 
 ## Why is this?
 For the following reasons:
 
 - Backbone is small, concrete and simple. 
 - The design of Backbone is delicate, and worth learning.
-- To get a deeper understanding of MVC pattern.
+- To get a deeper understanding of MV-ish.
 
 ## Who is This For?
 Basically, for myself. If you happened to see it, and are interested in the implementation of Backbone, it might be helpful.
